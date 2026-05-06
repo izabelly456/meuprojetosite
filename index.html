@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lunex Studio</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+</head>
+<body>
+
+<div id="loader">
+<div class="spinner"></div>
+</div>
+
+<div id="particles-js"></div>
+
+<!-- NAV -->
+
+<nav>
+
+<h1>Lunex Studio</h1>
+
+<div class="nav-links">
+<a href="#inicio">Início</a>
+<a href="#servicos">Serviços</a>
+<a href="#sobre">Sobre</a>
+<a href="#projetos">Projetos</a>
+<a href="#avaliacoes">Avaliações</a>
+<a href="#contato">Contato</a>
+</div>
+
+</nav>
+
+<!-- HERO -->
+
+<section id="inicio" class="hero">
+
+<div class="hero-text" data-aos="fade-right">
+
+<h2>
+Desenvolvimento de
+<span>sites profissionais</span>
+modernos e estratégicos
+</h2>
+
+<p>
+Projetos modernos, rápidos e profissionais focados em presença digital e geração de clientes.
+</p>
+
+<a href="https://wa.me/5511993256907" target="_blank">
+<button>Fale comigo</button>
+</a>
+
+</div>
+
+<div class="cube-container" data-aos="fade-left">
+
+<div class="cube">
+
+<div class="face front"></div>
+<div class="face back"></div>
+<div class="face right"></div>
+<div class="face left"></div>
+<div class="face top"></div>
+<div class="face bottom"></div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- SERVIÇOS -->
+
+<section id="servicos">
+
+<h2 data-aos="fade-up">Serviços</h2>
+
+<div class="cards">
+
+<div class="card glass" data-aos="zoom-in">
+<i class="fa-solid fa-code"></i>
+<h3>Criação de Sites</h3>
+<p>Sites modernos, rápidos e responsivos.</p>
+</div>
+
+<div class="card glass" data-aos="zoom-in">
+<i class="fa-solid fa-mobile-screen"></i>
+<h3>Responsividade</h3>
+<p>Layouts perfeitos para celular e computador.</p>
+</div>
+
+<div class="card glass" data-aos="zoom-in">
+<i class="fa-solid fa-rocket"></i>
+<h3>Performance</h3>
+<p>Sites otimizados e rápidos para clientes.</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- SOBRE -->
+
+<section id="sobre">
+
+<h2 data-aos="fade-up">Sobre mim</h2>
+
+<div class="sobre-box glass" data-aos="fade-up">
+
+<p>
+Desenvolvedora focada na criação de sites modernos e profissionais.
+Trabalho com HTML, CSS, JavaScript e banco de dados criando projetos bonitos, rápidos e estratégicos.
+</p>
+
+</div>
+
+</section>
+
+<!-- PROJETOS -->
+
+<section id="projetos">
+
+<h2 data-aos="fade-up">Projetos</h2>
+
+<div class="cards">
+
+<div class="card glass" data-aos="flip-left">
+<h3>Barbearia</h3>
+<p>Site moderno para barbearia premium.</p>
+</div>
+
+<div class="card glass" data-aos="flip-left">
+<h3>Estética</h3>
+<p>Layout elegante para estética feminina.</p>
+</div>
+
+<div class="card glass" data-aos="flip-left">
+<h3>Clínica</h3>
+<p>Visual profissional para clínicas.</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- AVALIAÇÕES -->
+
+<section id="avaliacoes">
+
+<h2 data-aos="fade-up">Avaliações</h2>
+
+<div class="form-avaliacao glass" data-aos="zoom-in">
+
+<input type="text" id="nome" placeholder="Seu nome">
+
+<textarea id="mensagem" placeholder="Escreva sua avaliação"></textarea>
+
+<div class="stars">
+
+<i class="fa-solid fa-star" data-value="1"></i>
+<i class="fa-solid fa-star" data-value="2"></i>
+<i class="fa-solid fa-star" data-value="3"></i>
+<i class="fa-solid fa-star" data-value="4"></i>
+<i class="fa-solid fa-star" data-value="5"></i>
+
+</div>
+
+<button onclick="adicionarAvaliacao()">
+Enviar avaliação
+</button>
+
+</div>
+
+<div id="lista-avaliacoes" class="cards-avaliacoes"></div>
+
+</section>
+
+<!-- CONTATO -->
+
+<section id="contato">
+
+<h2 data-aos="fade-up">Contato</h2>
+
+<div class="contato-box glass" data-aos="zoom-in">
+
+<p><i class="fa-brands fa-whatsapp"></i> 11 99325-6907</p>
+
+<p><i class="fa-solid fa-envelope"></i> izas2souza23@gmail.com</p>
+
+</div>
+
+</section>
+
+<!-- BOTÃO WHATS -->
+
+<a href="https://wa.me/5511993256907" class="whatsapp" target="_blank">
+
+<i class="fa-brands fa-whatsapp"></i>
+
+</a>
+
+<!-- TOPO -->
+
+<button id="topBtn">
+↑
+</button>
+
+<footer>
+© 2026 Lunex Studio — Todos os direitos reservados.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+<script src="script.js"></script>
+
+</body>
+</html>

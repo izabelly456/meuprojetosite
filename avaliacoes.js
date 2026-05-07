@@ -1,3 +1,5 @@
+/* AOS */
+
 AOS.init();
 
 /* LOADER */
@@ -13,8 +15,6 @@ loader.style.display = "none";
 });
 
 /* PARTICLES */
-
-if(typeof particlesJS !== "undefined"){
 
 particlesJS("particles-js", {
 
@@ -47,8 +47,6 @@ speed: 1.5
 
 });
 
-}
-
 /* FIREBASE */
 
 const firebaseConfig = {
@@ -73,117 +71,9 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
 
-/* ESTRELAS */
-
-let nota = 0;
-
-const estrelas = document.querySelectorAll(".stars i");
-
-estrelas.forEach((star, index) => {
-
-star.addEventListener("click", () => {
-
-nota = index + 1;
-
-estrelas.forEach((s, i) => {
-
-if(i < nota){
-s.classList.add("active");
-}else{
-s.classList.remove("active");
-}
-
-});
-
-});
-
-});
-
-/* FOTO */
-
-function toBase64(file){
-
-return new Promise((resolve) => {
-
-const reader = new FileReader();
-
-reader.onload = () => resolve(reader.result);
-
-reader.readAsDataURL(file);
-
-});
-
-}
-
-/* ENVIAR */
-
-async function adicionarAvaliacao(){
-
-const nome = document.getElementById("nome").value.trim();
-
-const msg = document.getElementById("mensagem").value.trim();
-
-const fotoInput = document.getElementById("foto");
-
-if(nome === "" || msg === "" || nota === 0){
-
-alert("Preencha tudo corretamente!");
-
-return;
-
-}
-
-let foto = "";
-
-if(fotoInput.files[0]){
-
-foto = await toBase64(fotoInput.files[0]);
-
-}
-
-try{
-
-await db.collection("avaliacoes").add({
-
-nome: nome,
-msg: msg,
-nota: nota,
-foto: foto,
-data: Date.now()
-
-});
-
-alert("Avaliação enviada com sucesso!");
-
-document.getElementById("nome").value = "";
-document.getElementById("mensagem").value = "";
-document.getElementById("foto").value = "";
-
-nota = 0;
-
-estrelas.forEach((s) => {
-s.classList.remove("active");
-});
-
-carregarAvaliacoes();
-
-}catch(error){
-
-console.log(error);
-
-alert("Erro ao enviar avaliação.");
-
-}
-
-}
-
-/* CARREGAR */
-
-function carregarAvaliacoes(){
+/* MOSTRAR AVALIAÇÕES */
 
 const lista = document.getElementById("lista-avaliacoes");
-
-if(!lista) return;
 
 lista.innerHTML = `
 <div class="sem-avaliacoes">
@@ -192,18 +82,14 @@ Carregando avaliações...
 `;
 
 db.collection("avaliacoes")
-
-.get()
-
-.then((snapshot) => {
-
-lista.innerHTML = "";
+.orderBy("data", "desc")
+.onSnapshot((snapshot) => {
 
 if(snapshot.empty){
 
 lista.innerHTML = `
 <div class="sem-avaliacoes">
-Nenhuma avaliação ainda.
+Nenhuma avaliação encontrada.
 </div>
 `;
 
@@ -211,23 +97,19 @@ return;
 
 }
 
-const avaliacoes = [];
+lista.innerHTML = "";
 
 snapshot.forEach((doc) => {
 
-avaliacoes.push(doc.data());
+const av = doc.data();
 
-});
-
-avaliacoes.sort((a,b) => b.data - a.data);
-
-avaliacoes.forEach((av) => {
-
-let estrelasHTML = "";
+let estrelas = "";
 
 for(let i = 0; i < av.nota; i++){
 
-estrelasHTML += "⭐";
+estrelas += `
+<i class="fa-solid fa-star"></i>
+`;
 
 }
 
@@ -258,7 +140,7 @@ ${fotoHTML}
 <h4>${av.nome}</h4>
 
 <div class="estrelas-view">
-${estrelasHTML}
+${estrelas}
 </div>
 
 <p>${av.msg}</p>
@@ -269,9 +151,7 @@ ${estrelasHTML}
 
 });
 
-})
-
-.catch((error) => {
+}, (error) => {
 
 console.log(error);
 
@@ -283,19 +163,11 @@ Erro ao carregar avaliações.
 
 });
 
-}
-
-/* INICIAR */
-
-carregarAvaliacoes();
-
-/* TOPO */
+/* BOTÃO TOPO */
 
 const topBtn = document.getElementById("topBtn");
 
 window.addEventListener("scroll", () => {
-
-if(!topBtn) return;
 
 if(window.scrollY > 300){
 
@@ -309,17 +181,14 @@ topBtn.style.display = "none";
 
 });
 
-if(topBtn){
-
 topBtn.addEventListener("click", () => {
 
 window.scrollTo({
 
 top: 0,
+
 behavior: "smooth"
 
 });
 
 });
-
-}

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Avaliações • Lunex Studio</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div id="loader">
+<div class="spinner"></div>
+</div>
+
+<div id="particles-js"></div>
+
+<!-- NAV -->
+
+<nav>
+
+<h1>Lunex Studio</h1>
+
+<div class="nav-links">
+<a href="index.html">Voltar</a>
+</div>
+
+</nav>
+
+<!-- AVALIAÇÕES -->
+
+<section id="pagina-avaliacoes">
+
+<h2 data-aos="fade-up">
+Todas as avaliações
+</h2>
+
+<div id="lista-avaliacoes" class="cards-avaliacoes">
+
+<div class="sem-avaliacoes">
+Carregando avaliações...
+</div>
+
+</div>
+
+</section>
+
+<!-- TOPO -->
+
+<button id="topBtn">↑</button>
+
+<footer>
+© 2026 Lunex Studio — Todos os direitos reservados.
+</footer>
+
+<!-- SCRIPTS -->
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+
+/* AOS */
+
+AOS.init();
+
+/* LOADER */
+
+window.addEventListener("load", () => {
+
+const loader = document.getElementById("loader");
+
+if(loader){
+loader.style.display = "none";
+}
+
+});
+
+/* PARTICLES */
+
+particlesJS("particles-js", {
+
+particles: {
+
+number: { value: 80 },
+
+color: { value: "#a855f7" },
+
+shape: { type: "circle" },
+
+opacity: { value: 0.5 },
+
+size: { value: 3 },
+
+line_linked: {
+enable: true,
+distance: 150,
+color: "#a855f7",
+opacity: 0.4,
+width: 1
+},
+
+move: {
+enable: true,
+speed: 1.5
+}
+
+}
+
+});
+
+/* FIREBASE */
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyCj5H-DV3Z63VfHwoHg1BJvjdSBI74j3cw",
+
+authDomain: "lunex-studio-2c832.firebaseapp.com",
+
+projectId: "lunex-studio-2c832",
+
+storageBucket: "lunex-studio-2c832.firebasestorage.app",
+
+messagingSenderId: "405096037067",
+
+appId: "1:405096037067:web:79dac2e62e13f0540a394e",
+
+measurementId: "G-0ZQ6LP0B7W"
+
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+
+/* MOSTRAR AVALIAÇÕES */
+
+const lista = document.getElementById("lista-avaliacoes");
+
+db.collection("avaliacoes")
+.orderBy("data", "desc")
+.onSnapshot((snapshot) => {
+
+if(snapshot.empty){
+
+lista.innerHTML = `
+<div class="sem-avaliacoes">
+Nenhuma avaliação encontrada.
+</div>
+`;
+
+return;
+
+}
+
+lista.innerHTML = "";
+
+snapshot.forEach((doc) => {
+
+const av = doc.data();
+
+let estrelas = "";
+
+for(let i = 0; i < av.nota; i++){
+
+estrelas += `
+<i class="fa-solid fa-star"></i>
+`;
+
+}
+
+let fotoHTML = "";
+
+if(av.foto && av.foto !== ""){
+
+fotoHTML = `
+<img src="${av.foto}" class="avatar">
+`;
+
+}else{
+
+fotoHTML = `
+<div class="avatar auto">
+${av.nome.charAt(0).toUpperCase()}
+</div>
+`;
+
+}
+
+lista.innerHTML += `
+
+<div class="avaliacao glass">
+
+${fotoHTML}
+
+<h4>${av.nome}</h4>
+
+<div class="estrelas-view">
+${estrelas}
+</div>
+
+<p>${av.msg}</p>
+
+</div>
+
+`;
+
+});
+
+}, (error) => {
+
+console.log(error);
+
+lista.innerHTML = `
+<div class="sem-avaliacoes">
+Erro ao carregar avaliações.
+</div>
+`;
+
+});
+
+/* BOTÃO TOPO */
+
+const topBtn = document.getElementById("topBtn");
+
+window.addEventListener("scroll", () => {
+
+if(window.scrollY > 300){
+
+topBtn.style.display = "block";
+
+}else{
+
+topBtn.style.display = "none";
+
+}
+
+});
+
+topBtn.addEventListener("click", () => {
+
+window.scrollTo({
+
+top: 0,
+
+behavior: "smooth"
+
+});
+
+});
+
+</script>
+
+</body>
+</html>

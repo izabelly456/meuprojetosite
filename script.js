@@ -1,11 +1,13 @@
 AOS.init();
 
 /* LOADER */
+
 window.addEventListener("load", () => {
 document.getElementById("loader").style.display = "none";
 });
 
-/* PARTICLES (MANTIDO IGUAL) */
+/* PARTICLES */
+
 particlesJS("particles-js", {
 particles: {
 number: { value: 80 },
@@ -35,147 +37,179 @@ mode: "repulse"
 }
 });
 
-/* =========================
-   ⭐ AVALIAÇÕES
-========================= */
+/* FIREBASE */
 
-let nota = 0;
-let slideIndex = 0;
+const firebaseConfig = {
+
+apiKey: "SUA_API_KEY",
+authDomain: "SEU_PROJETO.firebaseapp.com",
+projectId: "SEU_PROJETO",
+storageBucket: "SEU_PROJETO.appspot.com",
+messagingSenderId: "000000000",
+appId: "APP_ID"
+
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
 
 /* ESTRELAS */
+
+let nota = 0;
+
 const estrelas = document.querySelectorAll(".stars i");
 
 estrelas.forEach((star, index) => {
+
 star.addEventListener("click", () => {
+
 nota = index + 1;
 
 estrelas.forEach((s, i) => {
 s.classList.toggle("active", i < nota);
 });
-});
+
 });
 
-/* CONVERTER FOTO */
-function toBase64(file) {
-return new Promise(resolve => {
-const reader = new FileReader();
-reader.onload = () => resolve(reader.result);
-reader.readAsDataURL(file);
 });
+
+/* FOTO BASE64 */
+
+function toBase64(file) {
+
+return new Promise(resolve => {
+
+const reader = new FileReader();
+
+reader.onload = () => resolve(reader.result);
+
+reader.readAsDataURL(file);
+
+});
+
 }
 
 /* ADICIONAR AVALIAÇÃO */
+
 async function adicionarAvaliacao() {
 
-let nome = document.getElementById("nome").value;
-let msg = document.getElementById("mensagem").value;
+let nome = document.getElementById("nome").value.trim();
+
+let msg = document.getElementById("mensagem").value.trim();
+
 let fotoInput = document.getElementById("foto");
 
 if (!nome || !msg || nota === 0) {
-alert("Preencha tudo corretamente");
+
+alert("Preencha tudo corretamente!");
 return;
+
 }
 
 let foto = "";
 
-if (fotoInput && fotoInput.files[0]) {
+if (fotoInput.files[0]) {
 foto = await toBase64(fotoInput.files[0]);
 }
 
-let lista = JSON.parse(localStorage.getItem("avaliacoes")) || [];
+await db.collection("avaliacoes").add({
 
-lista.push({
 nome,
 msg,
 nota,
-foto
-});
+foto,
+data: Date.now()
 
-localStorage.setItem("avaliacoes", JSON.stringify(lista));
+});
 
 document.getElementById("nome").value = "";
 document.getElementById("mensagem").value = "";
-if (fotoInput) fotoInput.value = "";
+document.getElementById("foto").value = "";
 
 nota = 0;
-estrelas.forEach(s => s.classList.remove("active"));
 
-mostrarAvaliacoes();
+estrelas.forEach(s => {
+s.classList.remove("active");
+});
+
 }
 
 /* MOSTRAR AVALIAÇÕES */
-function mostrarAvaliacoes() {
 
-let lista = JSON.parse(localStorage.getItem("avaliacoes")) || [];
-lista = lista.reverse();
+db.collection("avaliacoes")
+.orderBy("data", "desc")
+.onSnapshot(snapshot => {
 
 let container = document.getElementById("lista-avaliacoes");
+
 container.innerHTML = "";
 
-lista.forEach(av => {
+snapshot.forEach(doc => {
+
+let av = doc.data();
 
 let stars = "⭐".repeat(av.nota);
 
-/* FOTO OU INICIAL */
 let fotoHTML = "";
 
 if (av.foto && av.foto !== "") {
-fotoHTML = `<img class="avatar" src="${av.foto}">`;
+
+fotoHTML = `
+<img class="avatar" src="${av.foto}">
+`;
+
 } else {
-let inicial = av.nome ? av.nome.charAt(0).toUpperCase() : "?";
-fotoHTML = `<div class="avatar auto">${inicial}</div>`;
+
+let inicial = av.nome.charAt(0).toUpperCase();
+
+fotoHTML = `
+<div class="avatar auto">${inicial}</div>
+`;
+
 }
 
 container.innerHTML += `
+
 <div class="avaliacao glass">
+
 ${fotoHTML}
+
 <h4>${av.nome}</h4>
-<div>${stars}</div>
-<p>${av.msg}</p>
+
+<div class="estrelas-view">
+${stars}
 </div>
+
+<p>${av.msg}</p>
+
+</div>
+
 `;
+
 });
 
-aplicarSlide();
-}
-
-/* CARROSSEL */
-function aplicarSlide() {
-let slides = document.getElementById("lista-avaliacoes");
-slides.style.transform = `translateX(${-slideIndex * 270}px)`;
-slides.style.transition = "0.5s";
-}
-
-function mudarSlide(dir) {
-
-let lista = JSON.parse(localStorage.getItem("avaliacoes")) || [];
-let max = Math.max(0, lista.length - 3);
-
-slideIndex += dir;
-
-if (slideIndex < 0) slideIndex = 0;
-if (slideIndex > max) slideIndex = max;
-
-aplicarSlide();
-}
+});
 
 /* BOTÃO TOPO */
+
 const topBtn = document.getElementById("topBtn");
 
 window.addEventListener("scroll", () => {
+
 if (window.scrollY > 300) {
 topBtn.style.display = "block";
 } else {
 topBtn.style.display = "none";
 }
+
 });
 
 topBtn.addEventListener("click", () => {
+
 window.scrollTo({
 top: 0,
 behavior: "smooth"
 });
-});
 
-/* INICIAL */
-mostrarAvaliacoes();
+});
